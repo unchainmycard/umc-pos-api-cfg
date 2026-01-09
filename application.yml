@@ -1,0 +1,8 @@
+# UMC POS - Centralized Configuration Repository
+#
+# This file is loaded by all services via Config Server.
+# Service-specific config goes in <service-name>.yml
+#
+# See: ADR-P-config-service-020
+#
+# Note: Services have embedded defaults. Add overrides here only when needed.
