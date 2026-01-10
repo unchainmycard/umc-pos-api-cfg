@@ -1,0 +1,120 @@
+# UMC POS Audit Service - Externalized Configuration
+#
+# This configuration is served by Config Server to the audit-service.
+# See: ADR-P-audit-trail-026, ADR-P-config-service-020
+
+# MongoDB Configuration (ADR-P-local-storage-007)
+spring:
+  data:
+    mongodb:
+      uri: ${MONGODB_URI:mongodb://localhost:27017/umc_pos_audit}
+      auto-index-creation: true
+
+  # RabbitMQ Configuration (ADR-P-admin-checkout-sync-025)
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
+    listener:
+      simple:
+        acknowledge-mode: manual
+        prefetch: 10
+
+  # Jackson Configuration
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    deserialization:
+      fail-on-unknown-properties: false
+
+# Eureka Client Configuration (ADR-P-service-discovery-021)
+eureka:
+  client:
+    service-url:
+      defaultZone: http://${EUREKA_USER:eureka}:${EUREKA_PASSWORD:eureka}@${EUREKA_HOST:localhost}:${EUREKA_PORT:8761}/eureka/
+    fetch-registry: true
+    register-with-eureka: true
+  instance:
+    prefer-ip-address: ${EUREKA_PREFER_IP:false}
+    instance-id: ${spring.application.name}:${random.uuid}
+    health-check-url-path: /actuator/health
+    status-page-url-path: /actuator/info
+
+# Actuator endpoints for health checks and metrics (ADR-P-observability-017)
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+  endpoint:
+    health:
+      show-details: when-authorized
+      probes:
+        enabled: true
+  health:
+    livenessstate:
+      enabled: true
+    readinessstate:
+      enabled: true
+  info:
+    env:
+      enabled: true
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+
+# OpenAPI Configuration (ADR-P-api-protocol-004)
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+# Logging Configuration
+logging:
+  level:
+    root: INFO
+    com.umc.pos.audit: INFO
+    org.springframework.data.mongodb: WARN
+    org.springframework.amqp: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# Application info for actuator
+info:
+  app:
+    name: UMC POS Audit Service
+    description: Dedicated audit trail service for compliance-ready logging
+    version: '@project.version@'
+  adr:
+    reference: ADR-P-audit-trail-026
+
+---
+# Docker profile
+spring:
+  config:
+    activate:
+      on-profile: docker
+
+  data:
+    mongodb:
+      uri: mongodb://${MONGODB_ROOT_USERNAME:admin}:${MONGODB_ROOT_PASSWORD:admin}@mongodb:27017/umc_pos_audit?authSource=admin
+
+  rabbitmq:
+    host: rabbitmq
+    username: ${RABBITMQ_DEFAULT_USER:admin}
+    password: ${RABBITMQ_DEFAULT_PASS:admin}
+
+eureka:
+  instance:
+    hostname: audit-service
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://${EUREKA_USER:eureka}:${EUREKA_PASSWORD:eureka}@discovery-service:8761/eureka/
+
+logging:
+  level:
+    com.umc.pos.audit: DEBUG
