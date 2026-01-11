@@ -107,7 +107,7 @@ spring:
     host: rabbitmq
     username: ${RABBITMQ_DEFAULT_USER:admin}
     password: ${RABBITMQ_DEFAULT_PASS:admin}
-    virtual-host: umc_pos
+    virtual-host: ${RABBITMQ_VHOST:umc_pos}
 
 eureka:
   instance:
