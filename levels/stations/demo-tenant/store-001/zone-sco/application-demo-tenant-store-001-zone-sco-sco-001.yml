@@ -1,0 +1,48 @@
+# SCO 001 Configuration (Self-Checkout Zone, Store 001)
+#
+# This profile is activated when CONFIG_PROFILES includes:
+# "demo-tenant,store-001,zone-sco,sco-001"
+#
+# See: ADR-P-config-service-020
+
+# Station identification
+station:
+  id: sco-001
+  name: Libre-Service 1
+  type: sco
+
+# Station-specific port
+server:
+  port: 8083
+
+# Station-specific peripherals
+peripherals:
+  receipt-printer:
+    host: 192.168.2.101
+    port: 9100
+  payment-terminal:
+    host: 192.168.2.201
+    port: 8443
+    terminal-id: SCO001
+  barcode-scanner:
+    # Built-in scanner for SCO
+    type: integrated
+    port: USB0
+  weight-scale:
+    host: 192.168.2.101
+    port: 9300
+    # Bagging area scale
+    bagging-scale: true
+  customer-display:
+    # Integrated touchscreen
+    type: integrated
+    resolution: 1920x1080
+
+# Eureka instance identification
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:store-001:sco-001
+    metadata-map:
+      station-id: sco-001
+      station-type: sco
+      station-name: Libre-Service 1

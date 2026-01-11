@@ -1,0 +1,56 @@
+# Self-Checkout Zone Configuration (Store 001)
+#
+# This profile is activated when CONFIG_PROFILES includes:
+# "demo-tenant,store-001,zone-sco"
+#
+# SCO zone has different payment and interaction settings than checkout zone.
+#
+# See: ADR-P-config-service-020
+
+# Zone identification
+zone:
+  id: zone-sco
+  name: Self-Checkout
+  type: self-checkout
+  description: Self-service checkout area
+
+# SCO-specific checkout configuration
+checkout:
+  # SCO typically has limited payment methods
+  payment-methods:
+    cash: true
+    card: true
+    voucher: true
+    # Mobile payment encouraged for SCO
+    mobile: true
+  # Item restrictions for SCO
+  restrictions:
+    max-items: 15
+    age-verification-items: false  # Requires staff intervention
+    weighted-items: true
+  # Customer assistance settings
+  assistance:
+    # Alert staff after N seconds of inactivity
+    inactivity-timeout-seconds: 120
+    # Maximum weight discrepancy before alert (grams)
+    weight-tolerance-grams: 50
+
+# SCO UI settings
+ui:
+  language:
+    default: fr
+    available:
+      - fr
+      - en
+      - ar
+  # Larger timeout for self-service
+  session-timeout-seconds: 180
+  # Audio prompts for guidance
+  audio-prompts: true
+
+# Eureka zone metadata
+eureka:
+  instance:
+    metadata-map:
+      zone: zone-sco
+      zone-type: self-checkout

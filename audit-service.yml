@@ -38,9 +38,16 @@ eureka:
     register-with-eureka: true
   instance:
     prefer-ip-address: ${EUREKA_PREFER_IP:false}
-    instance-id: ${spring.application.name}:${random.uuid}
+    # Instance ID for multi-instance deployments (Tier 1 edge)
+    instance-id: ${spring.application.name}:${STORE_ID:local}:${STATION_ID:${random.uuid}}
     health-check-url-path: /actuator/health
     status-page-url-path: /actuator/info
+    # Zone metadata for locality-aware routing (ADR-P-config-service-020)
+    metadata-map:
+      zone: ${STORE_ID:central}
+      store-id: ${STORE_ID:}
+      station-id: ${STATION_ID:}
+      station-type: ${STATION_TYPE:audit}
 
 # Actuator endpoints for health checks and metrics (ADR-P-observability-017)
 management:
