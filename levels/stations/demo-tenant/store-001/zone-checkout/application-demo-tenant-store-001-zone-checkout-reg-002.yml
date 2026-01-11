@@ -1,0 +1,42 @@
+# Register 002 Configuration (Checkout Zone, Store 001)
+#
+# This profile is activated when CONFIG_PROFILES includes:
+# "demo-tenant,store-001,zone-checkout,reg-002"
+#
+# See: ADR-P-config-service-020
+
+# Station identification
+station:
+  id: reg-002
+  name: Caisse 2
+  type: register
+
+# Station-specific port (different from reg-001)
+server:
+  port: 8082
+
+# Station-specific peripherals (different IPs from reg-001)
+peripherals:
+  receipt-printer:
+    host: 192.168.1.102
+    port: 9100
+  payment-terminal:
+    host: 192.168.1.202
+    port: 8443
+    terminal-id: TERM002
+  customer-display:
+    host: 192.168.1.102
+    port: 9200
+  scanner:
+    port: COM3
+  cash-drawer:
+    port: COM4
+
+# Eureka instance identification
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:store-001:reg-002
+    metadata-map:
+      station-id: reg-002
+      station-type: register
+      station-name: Caisse 2

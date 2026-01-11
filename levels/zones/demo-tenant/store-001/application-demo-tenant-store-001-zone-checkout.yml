@@ -1,0 +1,57 @@
+# Checkout Zone Configuration (Store 001)
+#
+# This profile is activated when CONFIG_PROFILES includes "demo-tenant,store-001,zone-checkout"
+# Applies to all registers in the checkout zone.
+#
+# See: ADR-P-config-service-020
+
+# Zone identification
+zone:
+  id: zone-checkout
+  name: Checkout Area
+  type: cashier
+
+# Zone-specific settings
+checkout:
+  # Transaction settings
+  transaction:
+    timeout-minutes: 30
+    max-items: 500
+    require-customer-for-amount: 150.00
+
+  # Payment methods enabled in this zone
+  payment-methods:
+    cash: true
+    card: true
+    contactless: true
+    check: true
+    voucher: true
+    gift-card: true
+
+  # Cashier features
+  features:
+    suspend-resume: true
+    multi-basket: true
+    price-override: true
+    manual-discount: true
+
+# Zone peripherals
+peripherals:
+  scanner:
+    type: handheld
+    symbologies:
+      - EAN13
+      - EAN8
+      - UPC-A
+      - CODE128
+      - QR
+  cash-drawer:
+    enabled: true
+    auto-open: true
+
+# Eureka zone metadata
+eureka:
+  instance:
+    metadata-map:
+      zone: zone-checkout
+      zone-type: cashier

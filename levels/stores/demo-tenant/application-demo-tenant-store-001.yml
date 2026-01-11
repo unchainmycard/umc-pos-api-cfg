@@ -1,0 +1,52 @@
+# Store 001 Configuration (Demo Tenant)
+#
+# This profile is activated when CONFIG_PROFILES includes "demo-tenant,store-001"
+# Overrides tenant-level settings for this specific store.
+#
+# See: ADR-P-config-service-020
+
+# Store identification
+store:
+  id: store-001
+  name: Paris Centre
+  address: 123 Rue de Rivoli, 75001 Paris
+  format: hypermarket
+
+  # Store operating hours
+  hours:
+    open: "08:00"
+    close: "21:00"
+    sunday-open: true
+
+  # Local infrastructure
+  infrastructure:
+    registers: 12
+    self-checkout-stations: 4
+
+# Store-specific overrides
+features:
+  # This store has self-checkout enabled (overrides tenant default)
+  self-checkout: true
+
+# Store-level peripheral defaults
+peripherals:
+  receipt-printer:
+    model: EPSON-TM-T88VI
+    paper-width: 80
+  customer-display:
+    enabled: true
+    lines: 2
+
+# Local MongoDB for Tier 1 edge deployment
+spring:
+  data:
+    mongodb:
+      database: umc_pos_store_001
+
+# Eureka zone metadata for locality-aware routing
+eureka:
+  instance:
+    metadata-map:
+      zone: store-001
+      store-id: store-001
+      store-name: Paris Centre

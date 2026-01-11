@@ -1,0 +1,40 @@
+# Demo Tenant Configuration
+#
+# This profile is activated when CONFIG_PROFILES includes "demo-tenant"
+# Example: CONFIG_PROFILES=demo-tenant,store-001,reg-001
+#
+# See: ADR-P-config-service-020
+
+# Tenant-specific business rules
+tenant:
+  id: demo-tenant
+  name: Demo Retailer
+  country: FR
+  timezone: Europe/Paris
+  currency: EUR
+
+  # Fiscal settings (ADR-P-fiscal-compliance-013)
+  fiscal:
+    regime: NF525
+    tva-rates:
+      standard: 20.0
+      reduced: 5.5
+      super-reduced: 2.1
+
+  # Loyalty program settings
+  loyalty:
+    enabled: true
+    points-per-euro: 1
+    welcome-bonus: 100
+
+# Tenant-wide feature flags
+features:
+  multi-payment: true
+  gift-cards: true
+  customer-display: true
+  self-checkout: false
+
+# Default logging for tenant
+logging:
+  level:
+    com.umc.pos: INFO
