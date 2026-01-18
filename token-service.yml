@@ -36,8 +36,8 @@ umc:
     access-token-validity: ${TOKEN_ACCESS_VALIDITY:30m}
     refresh-token-validity: ${TOKEN_REFRESH_VALIDITY:8h}
     issuer: umc-pos
-    private-key-location: ${TOKEN_PRIVATE_KEY:classpath:keys/private.pem}
-    public-key-location: ${TOKEN_PUBLIC_KEY:classpath:keys/public.pem}
+    private-key-location: ${TOKEN_PRIVATE_KEY:classpath:keys/jwt-private.pem}
+    public-key-location: ${TOKEN_PUBLIC_KEY:classpath:keys/jwt-public.pem}
     key-id: ${TOKEN_KEY_ID:default-key-001}
     blacklist-ttl: ${TOKEN_BLACKLIST_TTL:35m}
     refresh-grace-period: ${TOKEN_REFRESH_GRACE:30s}

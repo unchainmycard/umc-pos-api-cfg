@@ -1,0 +1,132 @@
+# UMC POS API Gateway Service - Externalized Configuration
+#
+# This configuration is served by Config Server to the api-gateway-service.
+# See: ADR-P-api-gateway-022, ADR-P-authentication-011, ADR-F-jwt-key-management-001
+
+spring:
+  # JWT validation configuration (ADR-P-authentication-011, ADR-F-jwt-key-management-001)
+  # Uses standard Spring Security OAuth2 Resource Server auto-configuration
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          public-key-location: ${JWT_PUBLIC_KEY:classpath:keys/jwt-public.pem}
+
+  # Redis for token blacklist verification (session-token-mgt US-003-TASK-05)
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      timeout: 100ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+
+  # Cloud Gateway additional configuration
+  cloud:
+    gateway:
+      # Global CORS configuration (if needed for direct access)
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: ${CORS_ALLOWED_ORIGINS:http://localhost:4200}
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders: "*"
+            allowCredentials: true
+
+# Eureka Client Configuration (ADR-P-service-discovery-021)
+eureka:
+  client:
+    service-url:
+      defaultZone: http://${EUREKA_USER:eureka}:${EUREKA_PASSWORD:eureka}@${EUREKA_HOST:localhost}:${EUREKA_PORT:8761}/eureka/
+    fetch-registry: true
+    register-with-eureka: true
+  instance:
+    prefer-ip-address: ${EUREKA_PREFER_IP:false}
+    instance-id: ${spring.application.name}:${STORE_ID:local}:${STATION_ID:${random.uuid}}
+    health-check-url-path: /actuator/health
+    status-page-url-path: /actuator/info
+    metadata-map:
+      zone: ${STORE_ID:central}
+      store-id: ${STORE_ID:}
+      station-id: ${STATION_ID:}
+      station-type: ${STATION_TYPE:gateway}
+
+# Actuator endpoints for health checks and metrics (ADR-P-observability-017)
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics,gateway
+  endpoint:
+    health:
+      show-details: when-authorized
+      probes:
+        enabled: true
+    gateway:
+      enabled: true
+  health:
+    livenessstate:
+      enabled: true
+    readinessstate:
+      enabled: true
+    circuitbreakers:
+      enabled: true
+  info:
+    env:
+      enabled: true
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+
+# Logging Configuration
+logging:
+  level:
+    root: INFO
+    com.umc.pos.gateway: INFO
+    org.springframework.cloud.gateway: INFO
+    io.github.resilience4j: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# Application info for actuator
+info:
+  app:
+    name: UMC POS API Gateway Service
+    description: API Gateway for UMC POS microservices
+    version: '@project.version@'
+  adr:
+    reference: ADR-P-api-gateway-022
+
+---
+# Docker profile
+spring:
+  config:
+    activate:
+      on-profile: docker
+
+  data:
+    redis:
+      host: redis
+      port: 6379
+
+eureka:
+  instance:
+    hostname: api-gateway-service
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://${EUREKA_USER:eureka}:${EUREKA_PASSWORD:eureka}@discovery-service:8761/eureka/
+
+logging:
+  level:
+    com.umc.pos.gateway: DEBUG
