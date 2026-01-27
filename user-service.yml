@@ -1,0 +1,127 @@
+# UMC POS User Service - Externalized Configuration
+#
+# This configuration is served by Config Server to the user-service.
+# See: ADR-P-config-server-030, user-account-mgt feature
+
+# MongoDB Configuration (ADR-P-local-storage-007)
+spring:
+  data:
+    mongodb:
+      uri: ${MONGODB_URI:mongodb://localhost:27017/umc_pos_user}
+      auto-index-creation: true
+
+  # RabbitMQ Configuration (ADR-P-module-communication-005)
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
+    virtual-host: ${RABBITMQ_VHOST:/}
+
+  # Jackson Configuration
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    deserialization:
+      fail-on-unknown-properties: false
+
+# Eureka Client Configuration (ADR-P-service-discovery-021)
+eureka:
+  client:
+    service-url:
+      defaultZone: http://${EUREKA_USER:eureka}:${EUREKA_PASSWORD:eureka}@${EUREKA_HOST:localhost}:${EUREKA_PORT:8761}/eureka/
+    fetch-registry: true
+    register-with-eureka: true
+  instance:
+    prefer-ip-address: ${EUREKA_PREFER_IP:false}
+    instance-id: ${spring.application.name}:${STORE_ID:local}:${STATION_ID:${random.uuid}}
+    health-check-url-path: /actuator/health
+    status-page-url-path: /actuator/info
+    metadata-map:
+      zone: ${STORE_ID:central}
+      store-id: ${STORE_ID:}
+      station-id: ${STATION_ID:}
+      station-type: ${STATION_TYPE:user}
+
+# Actuator endpoints for health checks and metrics (ADR-P-observability-017)
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+  endpoint:
+    health:
+      show-details: when-authorized
+      probes:
+        enabled: true
+  health:
+    livenessstate:
+      enabled: true
+    readinessstate:
+      enabled: true
+    mongo:
+      enabled: true
+  info:
+    env:
+      enabled: true
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+
+# OpenAPI Configuration (ADR-P-api-protocol-004)
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+
+# Logging Configuration
+logging:
+  level:
+    root: INFO
+    com.umc.pos.user: INFO
+    org.springframework.security: WARN
+    org.springframework.data.mongodb: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# Application info for actuator
+info:
+  app:
+    name: UMC POS User Service
+    description: User account management service
+    version: '@project.version@'
+  feature:
+    reference: user-account-mgt
+
+---
+# Docker profile
+spring:
+  config:
+    activate:
+      on-profile: docker
+
+  data:
+    mongodb:
+      uri: mongodb://${MONGODB_ROOT_USERNAME:admin}:${MONGODB_ROOT_PASSWORD:admin}@mongodb:27017/umc_pos_user?authSource=admin
+
+  rabbitmq:
+    host: rabbitmq
+    username: ${RABBITMQ_DEFAULT_USER:admin}
+    password: ${RABBITMQ_DEFAULT_PASS:admin}
+    virtual-host: ${RABBITMQ_VHOST:umc_pos}
+
+eureka:
+  instance:
+    hostname: user-service
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://${EUREKA_USER:eureka}:${EUREKA_PASSWORD:eureka}@discovery-service:8761/eureka/
+
+logging:
+  level:
+    com.umc.pos.user: DEBUG
