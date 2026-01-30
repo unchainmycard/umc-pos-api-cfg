@@ -3,6 +3,115 @@
 # This configuration is served by Config Server to the role-service.
 # See: ADR-P-config-server-030, role-definition feature
 
+# Permission Catalog (ADR-F-permission-catalog-002)
+# Defines all available permissions organized by functional category.
+# Permissions are system-wide and immutable at runtime.
+permission-catalog:
+  categories:
+    role-management:
+      name: Role Management
+      permissions:
+        - code: ROLE_CREATE
+          description: Create new roles
+        - code: ROLE_VIEW
+          description: View role details and list
+        - code: ROLE_UPDATE
+          description: Modify role name and description
+        - code: ROLE_DELETE
+          description: Deactivate roles
+        - code: ROLE_ASSIGN_PERMISSIONS
+          description: Assign permissions to roles
+
+    user-management:
+      name: User Management
+      permissions:
+        - code: USER_CREATE
+          description: Create user accounts
+        - code: USER_VIEW
+          description: View user details and list
+        - code: USER_UPDATE
+          description: Modify user information
+        - code: USER_DELETE
+          description: Deactivate user accounts
+        - code: USER_ASSIGN_ROLES
+          description: Assign roles to users
+        - code: USER_RESET_PASSWORD
+          description: Reset user passwords
+
+    organization:
+      name: Organization
+      permissions:
+        - code: ORG_VIEW
+          description: View organization settings
+        - code: ORG_UPDATE
+          description: Modify organization settings
+        - code: STORE_CREATE
+          description: Create new stores
+        - code: STORE_VIEW
+          description: View store details
+        - code: STORE_UPDATE
+          description: Modify store settings
+        - code: STORE_DELETE
+          description: Deactivate stores
+
+    inventory:
+      name: Inventory
+      permissions:
+        - code: INVENTORY_VIEW
+          description: View inventory levels
+        - code: INVENTORY_ADJUST
+          description: Adjust inventory quantities
+        - code: INVENTORY_RECEIVE
+          description: Receive inventory shipments
+        - code: INVENTORY_TRANSFER
+          description: Transfer inventory between locations
+        - code: PRODUCT_CREATE
+          description: Create product catalog entries
+        - code: PRODUCT_VIEW
+          description: View product details
+        - code: PRODUCT_UPDATE
+          description: Modify product information
+        - code: PRODUCT_DELETE
+          description: Remove products from catalog
+
+    sales:
+      name: Sales
+      permissions:
+        - code: SALE_CREATE
+          description: Process sales transactions
+        - code: SALE_VIEW
+          description: View sales history
+        - code: SALE_VOID
+          description: Void sales transactions
+        - code: SALE_REFUND
+          description: Process refunds
+        - code: DISCOUNT_APPLY
+          description: Apply discounts to sales
+        - code: PRICE_OVERRIDE
+          description: Override product prices
+
+    reporting:
+      name: Reporting
+      permissions:
+        - code: REPORT_SALES
+          description: View sales reports
+        - code: REPORT_INVENTORY
+          description: View inventory reports
+        - code: REPORT_USER_ACTIVITY
+          description: View user activity reports
+        - code: REPORT_FINANCIAL
+          description: View financial reports
+        - code: REPORT_EXPORT
+          description: Export reports to file
+
+    audit:
+      name: Audit
+      permissions:
+        - code: AUDIT_VIEW
+          description: View audit log entries
+        - code: AUDIT_EXPORT
+          description: Export audit logs
+
 # MongoDB Configuration (ADR-P-local-storage-007)
 spring:
   data:
