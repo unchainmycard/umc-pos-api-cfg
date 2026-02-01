@@ -69,6 +69,15 @@ management:
       export:
         enabled: true
 
+# Feign client configuration for audit-service (ADR-P-audit-trail-026)
+spring.cloud.openfeign:
+  client:
+    config:
+      audit-service:
+        connect-timeout: 5000
+        read-timeout: 5000
+        logger-level: basic
+
 # OpenAPI Configuration (ADR-P-api-protocol-004)
 springdoc:
   api-docs:
