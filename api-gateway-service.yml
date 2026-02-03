@@ -28,6 +28,143 @@ spring:
   # Cloud Gateway additional configuration
   cloud:
     gateway:
+      # Enable service discovery locator for automatic route generation
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+
+      # Default filters applied to all routes
+      default-filters:
+        - name: CircuitBreaker
+          args:
+            name: defaultCircuitBreaker
+            fallbackUri: forward:/fallback
+
+      # Route definitions for business services
+      # Routes use lb:// scheme for load-balanced routing via Eureka
+      routes:
+        # Auth service routes (ADR-P-authentication-011)
+        - id: auth-service
+          uri: lb://auth-service
+          predicates:
+            - Path=/api/v1/auth/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: auth-cb
+                fallbackUri: forward:/fallback
+
+        # Token service routes (ADR-P-authentication-011)
+        - id: token-service
+          uri: lb://token-service
+          predicates:
+            - Path=/api/v1/tokens/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: token-cb
+                fallbackUri: forward:/fallback
+
+        # Session management routes (session-token-mgt feature)
+        - id: session-service
+          uri: lb://token-service
+          predicates:
+            - Path=/api/v1/sessions/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: session-cb
+                fallbackUri: forward:/fallback
+
+        # Organization service routes (org-hierarchy-mgt feature)
+        - id: organization-service
+          uri: lb://organization-service
+          predicates:
+            - Path=/api/v1/hierarchy-levels/**, /api/v1/org-units/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: organization-cb
+                fallbackUri: forward:/fallback
+
+        # User service routes (user-account-mgt feature)
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/api/v1/users/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: user-cb
+                fallbackUri: forward:/fallback
+
+        # Role service routes (role-definition feature)
+        - id: role-service
+          uri: lb://role-service
+          predicates:
+            - Path=/api/v1/roles/**, /api/v1/permissions/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: role-cb
+                fallbackUri: forward:/fallback
+
+        # Audit service routes (ADR-P-audit-trail-026)
+        - id: audit-service
+          uri: lb://audit-service
+          predicates:
+            - Path=/api/v1/audit/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: audit-cb
+                fallbackUri: forward:/fallback
+
+        # Article service routes
+        - id: article-service
+          uri: lb://article-svc
+          predicates:
+            - Path=/api/articles/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: article-cb
+                fallbackUri: forward:/fallback
+
+        # Payment service routes
+        - id: payment-service
+          uri: lb://payment-svc
+          predicates:
+            - Path=/api/payments/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: payment-cb
+                fallbackUri: forward:/fallback
+
+        # Customer service routes
+        - id: customer-service
+          uri: lb://customer-svc
+          predicates:
+            - Path=/api/customers/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: customer-cb
+                fallbackUri: forward:/fallback
+
+        # Transaction service routes
+        - id: transaction-service
+          uri: lb://transaction-svc
+          predicates:
+            - Path=/api/transactions/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: transaction-cb
+                fallbackUri: forward:/fallback
+
       # Global CORS configuration (if needed for direct access)
       globalcors:
         corsConfigurations:
