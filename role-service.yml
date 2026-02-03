@@ -112,6 +112,12 @@ permission-catalog:
         - code: AUDIT_EXPORT
           description: Export audit logs
 
+# Role Conflict Configuration (US-011-TASK-01)
+# Enables separation of duties enforcement via conflict rules
+role-conflict:
+  enabled: true
+  block-by-default: false
+
 # MongoDB Configuration (ADR-P-local-storage-007)
 spring:
   data:
