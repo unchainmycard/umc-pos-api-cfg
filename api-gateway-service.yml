@@ -44,7 +44,29 @@ spring:
       # Route definitions for business services
       # Routes use lb:// scheme for load-balanced routing via Eureka
       routes:
-        # Auth service routes (ADR-P-authentication-011)
+        # Token refresh/revoke routes - MUST be before auth-service catch-all
+        # These endpoints live in token-service, not auth-service (ADR-P-authentication-011)
+        - id: token-auth-refresh
+          uri: lb://token-service
+          predicates:
+            - Path=/api/v1/auth/refresh
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: token-cb
+                fallbackUri: forward:/fallback
+
+        - id: token-auth-revoke
+          uri: lb://token-service
+          predicates:
+            - Path=/api/v1/auth/revoke
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: token-cb
+                fallbackUri: forward:/fallback
+
+        # Auth service routes - login only (ADR-P-authentication-011)
         - id: auth-service
           uri: lb://auth-service
           predicates:
