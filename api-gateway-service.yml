@@ -125,7 +125,7 @@ spring:
         - id: role-service
           uri: lb://role-service
           predicates:
-            - Path=/api/v1/roles/**, /api/v1/permissions/**
+            - Path=/api/v1/roles/**, /api/v1/permissions/**, /api/v1/role-assignments/**
           filters:
             - name: CircuitBreaker
               args:
