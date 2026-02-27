@@ -99,6 +99,10 @@ spring.cloud.openfeign:
         connect-timeout: 5000
         read-timeout: 5000
         logger-level: basic
+      role-service:
+        connect-timeout: 5000
+        read-timeout: 5000
+        logger-level: basic
 
 # Logging Configuration
 logging:
