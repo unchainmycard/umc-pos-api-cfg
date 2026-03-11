@@ -111,11 +111,11 @@ spring:
                 name: session-cb
                 fallbackUri: forward:/fallback
 
-        # Organization service routes (org-hierarchy-mgt + store-directory features)
+        # Organization service routes (org-hierarchy-mgt + store-directory + register-provisioning features)
         - id: organization-service
           uri: lb://organization-service
           predicates:
-            - Path=/api/v1/hierarchy-levels/**, /api/v1/org-units/**, /api/v1/stores/**
+            - Path=/api/v1/hierarchy-levels/**, /api/v1/org-units/**, /api/v1/stores/**, /api/v1/registers/**
           filters:
             - name: CircuitBreaker
               args:
