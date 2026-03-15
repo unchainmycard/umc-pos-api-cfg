@@ -54,6 +54,22 @@ permission-catalog:
         - code: STORE_DELETE
           description: Deactivate stores
 
+    register-management:
+      name: Register Management
+      permissions:
+        - code: REGISTER_CREATE
+          description: Create registers in a store
+        - code: REGISTER_VIEW
+          description: View register details and list
+        - code: REGISTER_UPDATE
+          description: Modify register label and type
+        - code: REGISTER_DEACTIVATE
+          description: Deactivate registers
+        - code: REGISTER_REACTIVATE
+          description: Reactivate deactivated registers
+        - code: REGISTER_SEARCH
+          description: Search registers across stores
+
     inventory:
       name: Inventory
       permissions:
