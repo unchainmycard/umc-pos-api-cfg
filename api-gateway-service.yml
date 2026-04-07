@@ -122,11 +122,11 @@ spring:
                 name: organization-cb
                 fallbackUri: forward:/fallback
 
-        # User service routes (user-account-mgt feature)
+        # User service routes (user-account-mgt + pos-store-assignment features)
         - id: user-service
           uri: lb://user-service
           predicates:
-            - Path=/api/v1/users/**
+            - Path=/api/v1/users/**, /api/v1/pos-store-assignments/**
           filters:
             - name: CircuitBreaker
               args:

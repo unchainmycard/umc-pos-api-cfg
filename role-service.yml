@@ -70,6 +70,18 @@ permission-catalog:
         - code: REGISTER_SEARCH
           description: Search registers across stores
 
+    pos-store-assignment:
+      name: POS Store Assignment
+      permissions:
+        - code: POS_ASSIGNMENT_CREATE
+          description: Assign users to stores with a POS profile
+        - code: POS_ASSIGNMENT_VIEW
+          description: View POS store assignments
+        - code: POS_ASSIGNMENT_UPDATE
+          description: Modify POS store assignment profile and dates
+        - code: POS_ASSIGNMENT_REVOKE
+          description: Revoke POS store assignments
+
     inventory:
       name: Inventory
       permissions:
