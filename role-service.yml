@@ -70,6 +70,12 @@ permission-catalog:
         - code: REGISTER_SEARCH
           description: Search registers across stores
 
+    station-setup:
+      name: Station Setup
+      permissions:
+        - code: STATION_SETUP
+          description: Configure or reconfigure a POS terminal (select store and register)
+
     pos-store-assignment:
       name: POS Store Assignment
       permissions:
