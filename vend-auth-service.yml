@@ -63,6 +63,18 @@ springdoc:
   swagger-ui:
     path: /swagger-ui.html
 
+# POS Authentication Configuration (ADR-F-pos-login-endpoint-001)
+umc:
+  pos:
+    auth:
+      # Duration for offline token validity claim (offline-credential-cache feature)
+      offline-valid-duration: ${POS_OFFLINE_VALID_DURATION:P7D}
+      # POS profile to permissions mapping
+      profile-permissions:
+        SUPERVISOR: POS_SELL,POS_RETURN,POS_VOID,POS_DISCOUNT,POS_PRICE_OVERRIDE,POS_SUSPEND,POS_CASH_MANAGEMENT,POS_SUPERVISOR_OVERRIDE,POS_VIEW_REPORTS
+        CASHIER: POS_SELL,POS_RETURN,POS_VOID,POS_SUSPEND
+        TRAINEE: POS_SELL
+
 # Feign Client Configuration
 spring.cloud.openfeign:
   client:
@@ -71,6 +83,9 @@ spring.cloud.openfeign:
         connect-timeout: 5000
         read-timeout: 5000
       user-service:
+        connect-timeout: 5000
+        read-timeout: 5000
+      posStoreAssignmentClient:
         connect-timeout: 5000
         read-timeout: 5000
 
