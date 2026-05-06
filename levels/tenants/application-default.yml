@@ -1,0 +1,37 @@
+# Default Tenant Configuration
+#
+# This profile is activated when CONFIG_PROFILES includes "default"
+# Example: CONFIG_PROFILES=default,store-0042
+#
+# The "default" tenant is used for development, testing, and single-tenant
+# deployments. Multi-tenant deployments use tenant-specific profiles (e.g., "carrefour").
+#
+# See: ADR-P-config-service-020
+
+# Tenant identification
+tenant:
+  id: default
+  name: UMC POS Default Tenant
+  country: FR
+  timezone: Europe/Paris
+  currency: EUR
+
+  # Fiscal settings (ADR-P-fiscal-compliance-013)
+  fiscal:
+    regime: NF525
+    tva-rates:
+      standard: 20.0
+      reduced: 5.5
+      super-reduced: 2.1
+
+# Tenant-wide feature flags
+features:
+  multi-payment: true
+  gift-cards: false
+  customer-display: false
+  self-checkout: false
+
+# Default logging for tenant
+logging:
+  level:
+    com.umc.pos: INFO
