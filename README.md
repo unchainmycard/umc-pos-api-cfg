@@ -6,6 +6,26 @@ Centralized configuration for all UMC POS microservices, served by Spring Cloud 
 
 ---
 
+> ### ⚠ TEMPORARY LIMITATION — `levels/` hierarchy is NOT wired to config-service
+>
+> As of 2026-07 (Tier 1 validation), the `levels/tenants/`, `levels/stores/`, `levels/regions/`, `levels/zones/`, `levels/stations/` subdirectories are **not reachable** by the Spring Cloud Config Server backend:
+> - Native mode has a single `search-locations` at the api-cfg root — subdirectories are not recursed.
+> - Git mode's `search-paths` (`{application}`, `{application}/{profile}`) doesn't cover `levels/`.
+> - No custom `EnvironmentRepository` bean exists to scan the hierarchy.
+>
+> **Consequence**: any `application-<profile>.yml` file placed under `levels/` is loaded by NO client service. Files must be at the **repository root** to be found.
+>
+> **Current workaround**: hierarchy-relevant files (`application-default.yml`, `application-tier1.yml`) are placed at the root. The `levels/` tree is retained for the demo-tenant example and as future documentation, but is functionally dead until the config-service is updated (or the file naming/placement convention is aligned with Spring's default lookup).
+>
+> **To fix properly** (out of Tier 1 validation scope):
+> 1. Extend config-service `search-locations` with placeholder patterns (`levels/tenants`, `levels/stores/{profile}`, ...) — requires config-service code change AND file renaming (Spring native looks up `application-<single-profile>.yml`, not `application-<tenant>-store-<store>.yml`).
+> 2. Or flatten and rename all hierarchy files to root — simpler, aligned with Spring conventions.
+> 3. Or add a custom `EnvironmentRepository` bean that walks the `levels/` tree.
+>
+> Track as: `config-hierarchy-resolution` (to add to backlog after Tier 1 validation).
+
+---
+
 ## Repository Structure
 
 ```

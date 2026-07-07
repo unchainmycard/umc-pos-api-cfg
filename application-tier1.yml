@@ -1,0 +1,22 @@
+# Tier 1 Cluster Configuration (shared across all Tier 1 stores)
+#
+# Activated when CONFIG_PROFILES includes "tier1"
+# Example: CONFIG_PROFILES=default,tier1
+#
+# Reserved for Tier 1-specific overrides that apply to EVERY Tier 1 store
+# (not to a single store). Store-specific overrides — when actually needed —
+# still live in levels/stores/<tenant>/application-<tenant>-<code>.yml.
+#
+# Currently empty because the base configuration already handles Tier 1
+# via env vars set on the register VM:
+#   - MONGODB_URI, RABBITMQ_HOST/PORT, REDIS_HOST/PORT   → localhost
+#   - STORE_ID, STATION_ID, STATION_TYPE                 → Eureka metadata
+#   - CONFIG_PROFILES=default,tier1                      → activates this profile
+#
+# This file is retained as the anchor for the profile chain. Content will
+# land here when the following features ship:
+#   - message-bridge (D-7, ADR-P-message-bridge-048)
+#   - cascading gateway routing (D-8, ADR-P-cascading-gateway-049)
+#   - data sync client defaults (D-5, ADR-P-data-sync-model-047)
+#
+# See: ADR-P-config-service-020, ADR-P-local-storage-007
